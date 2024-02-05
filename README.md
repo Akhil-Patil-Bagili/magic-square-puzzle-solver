@@ -2,11 +2,11 @@
 
 ## Description
 
-* Magic Square Puzzle Solver is an engaging web application designed to challenge users to solve magic square puzzles. Initially focusing on the 3x3 square, it aims to provide a fun, interactive way for users to engage with one of the oldest mathematical puzzles known. The application plans to expand to include 4x4 squares, offering additional complexity and challenge.
+* Magic Square Puzzle Solver is an engaging web application designed to challenge users to solve magic square puzzles. It aims to provide a fun, interactive way for users to engage with one of the oldest mathematical puzzles known to offer complexity and challenge.
 
 ### Github URL
 
-* `<Insert your GitHub repository URL here>`
+* `https://github.com/Akhil-Patil-Bagili/magic-square-puzzle-solver`
 
 ## Milestones with deadlines
 
@@ -43,7 +43,7 @@ The core engine of the Magic Square Puzzle Solver involves algorithms to generat
 
 ## Authors
 
-* `<Insert your name here>`
+* `Akhil Patil Bagili`
 
 ## Version History
 
