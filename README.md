@@ -11,9 +11,9 @@
 ## Milestones with deadlines
 
 * **Week 1:** Setup repo and Flask application, start puzzle generation strategy.
-* **Week 2:** Implement the magic square generation algorithm for 3x3 puzzles and basic user interaction.
+* **Week 2:** Implement the magic square generation algorithm for puzzles and basic user interaction.
 * **Week 3:** Build the frontend interaction with React.
-* **Week 4:** Expand to include 4x4 puzzles, improving the algorithm for dynamic puzzle generation.
+* **Week 4:** Improving the algorithm for dynamic puzzle generation.
 * **Week 5:** Testing, feedback integration, and UI enhancements.
 
 ## Algorithms/AI schemes
