@@ -16,7 +16,7 @@ export const Home = () => {
 
         const fetchData = async () => {
             try {
-                const userResponse = await axios.get("http://127.0.0.1:5000/me", {
+                const userResponse = await axios.get("http://localhost:3000/api/users/me", {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUser(userResponse.data); 

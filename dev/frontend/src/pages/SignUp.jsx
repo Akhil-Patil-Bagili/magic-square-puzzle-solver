@@ -17,14 +17,16 @@ export const SignUp = () => {
 
     const handleSubmit = async () => {
         try {
-            const response = await axios.post('http://127.0.0.1:5000/signup', {
-                first_name: firstName ,
-                last_name: lastName,
+            const response = await axios.post('http://127.0.0.1:5000/api/users/register', {
+                firstName,
+                lastName,
                 username,
                 password
             });
-            localStorage.setItem('token', response.data.access_token);
-            navigate('/homepage');
+
+            console.log(response)
+            alert("User signed up successfully!")
+            navigate('/signin');
         } catch (error) {
             console.error('Signup failed:', error);
         }

@@ -3,13 +3,8 @@ import {HeroHeading} from "../components/HeroHeading";
 import {HeroSubHeading} from "../components/HeroSubHeading";
 import {ButtonDark} from "../components/ButtonDark";
 import HeroImage from "../assets/HeroImage.png";
-import {useNavigate} from 'react-router-dom';
 
 export const LandingPage = () => {
-    const navigate = useNavigate();
-    const handleSignUp = () =>{
-        navigate('/signup')
-    }
     return <div>
         <LandingBar/>
         <section className="bg-white dark:bg-gray-900">
@@ -17,7 +12,7 @@ export const LandingPage = () => {
                 <div className="mr-auto place-self-center lg:col-span-7">
                     <HeroHeading label="Discover the Magic of Numbers"/>
                     <HeroSubHeading label="craft your square, cast your spell!"/>
-                    <ButtonDark onClick={handleSignUp} label="Get Started"/>
+                    <ButtonDark label="Get Started"/>
                 </div>  
                 <div className="hidden lg:mt-4 lg:col-span-3 lg:flex">
                     <img src={HeroImage} alt="mockup"/>

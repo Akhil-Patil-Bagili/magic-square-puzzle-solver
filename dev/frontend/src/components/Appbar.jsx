@@ -5,7 +5,7 @@ import logo from "../assets/logo.png";
 export const Appbar = ({ user }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
-    const initial = user && user.first_name ? user.first_name.charAt(0) : '?';
+    const initial = user && user.firstName? user.firstName.charAt(0)+user.lastName.charAt(0) : '?';
     const menuRef = useRef(); 
 
     useEffect(() => {
@@ -42,7 +42,7 @@ export const Appbar = ({ user }) => {
             </a>
             <div className="flex items-center" ref={menuRef}>
                 <div className="flex flex-col justify-center h-full mr-4 text-gray-700">
-                    Hello, {user && user.first_name ? user.first_name : 'Guest'}
+                    Hello, {user && user.firstName ? user.firstName : 'Guest'}
                 </div>
                 <button onClick={toggleMenu} className="rounded-full w-12 h-12 bg-gray-200 flex justify-center items-center text-xl cursor-pointer text-gray-700">
                     {initial}

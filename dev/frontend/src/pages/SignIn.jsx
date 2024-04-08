@@ -15,12 +15,12 @@ export const SignIn = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-      const response = await axios.post("http://127.0.0.1:5000/signin",{
+      const response = await axios.post("http://127.0.0.1:5000/api/users/login",{
         username,
         password
       })
       localStorage.setItem("token", response.data.access_token)
-      navigate("/homepage")
+      navigate("/home")
     }
     
     return <div>
