@@ -51,19 +51,12 @@ Before you begin, ensure you have the following installed:
     cd dev/backend
     ```
 
-2. Create and activate a virtual environment:
-    ```bash
-    python -m venv venv
-    .\venv\Scripts\activate # On Windows
-    source venv/bin/activate # On Unix/macOS
-    ```
-
-3. Install the dependencies:
+2. Install the dependencies:
     ```bash
     pip install -r requirements.txt
     ```
 
-4. Run the backend server:
+3. Run the backend server:
     ```bash
     flask run
     ```
