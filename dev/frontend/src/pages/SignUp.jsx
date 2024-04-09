@@ -7,6 +7,7 @@ import { Heading } from '../components/Heading';
 import { InputBox } from '../components/InputBox';
 import { SubHeading } from '../components/SubHeading';
 import { LandingBar } from '../components/LandingBar';
+import { API_ENDPOINTS } from '../apiConfig';
 
 export const SignUp = () => {
     const [firstName, setFirstName] = useState('');
@@ -17,7 +18,7 @@ export const SignUp = () => {
 
     const handleSubmit = async () => {
         try {
-            const response = await axios.post('http://127.0.0.1:5000/api/users/register', {
+            const response = await axios.post(API_ENDPOINTS.register, {
                 firstName,
                 lastName,
                 username,

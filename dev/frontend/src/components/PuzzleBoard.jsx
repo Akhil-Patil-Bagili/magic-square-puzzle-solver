@@ -4,6 +4,7 @@ import DroppableCell from './DroppableCell';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../apiConfig';
 
 export const PuzzleBoard = () => {
   // const initialNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -16,7 +17,7 @@ export const PuzzleBoard = () => {
 
   const fetchNumbers = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:5000/api/puzzle/generate?level=${level}');
+      const response = await axios.get("http://localhost:5000/api/puzzle/generate?level=${level}");
       setAvailableNumbers(response.data.numbers);
     } catch (error) {
       console.error("Error fetching new numbers:", error);
@@ -53,7 +54,7 @@ export const PuzzleBoard = () => {
     ];
 
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/magic-square/check', { matrix });
+      const response = await axios.post(API_ENDPOINTS.check, { matrix });
       alert(response.data.message);
     } catch (error) {
       alert("Error submitting the puzzle. Please try again.");

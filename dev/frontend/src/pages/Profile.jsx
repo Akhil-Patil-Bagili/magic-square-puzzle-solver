@@ -5,6 +5,7 @@ import { SubHeading } from "../components/SubHeading";
 import { ButtonDark } from "../components/ButtonDark";
 import { Appbar } from "../components/Appbar";
 import { InputBox } from "../components/InputBox"; // Ensure you have an InputBox component
+import { API_ENDPOINTS } from "../apiConfig";
 
 export const Profile = () => {
     const [user, setUser] = useState({});
@@ -42,7 +43,7 @@ export const Profile = () => {
     const handleSubmit = async () => {
         const token = localStorage.getItem('token');
         try {
-            await axios.put("http://127.0.0.1:5000/api/users/update", editedUser, {
+            await axios.put(API_ENDPOINTS.update, editedUser, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert("Profile updated successfully!");

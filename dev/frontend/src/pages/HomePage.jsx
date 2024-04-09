@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { PuzzleBoard } from "../components/PuzzleBoard";
 import { HeroSubHeading } from "../components/HeroSubHeading";
+import { API_ENDPOINTS } from "../apiConfig";
 
 
 export const HomePage = () => {
@@ -19,13 +20,13 @@ export const HomePage = () => {
 
         const fetchData = async () => {
             try {
-                const userResponse = await axios.get("http://127.0.0.1:5000/api/users/me", {
+                const userResponse = await axios.get(API_ENDPOINTS.profile , {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUser(userResponse.data); 
                 console.log(userResponse.data)
 
-                const puzzleResponse = await axios.get("http://127.0.0.1:5000/api/puzzle");
+                const puzzleResponse = await axios.get(API_ENDPOINTS.puzzle);
                 setPuzzle(puzzleResponse.data.puzzle);
             } catch (error) {
                 console.error("Error fetching data:", error);
