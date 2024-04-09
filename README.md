@@ -22,27 +22,9 @@ Before you begin, ensure you have the following installed:
 
 ### Setup and Running
 
-#### Option 1: Docker Setup (Recommended)
 
-1. **Clone the Repository**
-    ```bash
-    git clone https://github.com/Akhil-Patil-Bagili/magic-square-puzzle-solver.git
-    ```
+#### Option 1: Local Setup
 
-2. **Navigate to Project Directory**
-    ```bash
-    cd dev
-    ```
-
-3. **Build and Run with Docker Compose**
-    ```bash
-    docker-compose up --build
-    ```
-
-4. **Access the Application**
-    The web application will be available at [http://localhost:3000](http://localhost:3000).
-
-#### Option 2: Local Setup
 
 **Backend Setup:**
 
@@ -85,6 +67,27 @@ Before you begin, ensure you have the following installed:
     ```
 
 4. The web application will be available at [http://localhost:3000](http://localhost:3000).
+
+
+#### Option 2: Docker Setup (Recommended)
+
+1. **Clone the Repository**
+    ```bash
+    git clone https://github.com/Akhil-Patil-Bagili/magic-square-puzzle-solver.git
+    ```
+
+2. **Navigate to Project Directory**
+    ```bash
+    cd dev
+    ```
+
+3. **Build and Run with Docker Compose**
+    ```bash
+    docker-compose up --build
+    ```
+
+4. **Access the Application**
+    The web application will be available at [http://localhost:3000](http://localhost:3000).
 
 ## Project Milestones
 
