@@ -17,7 +17,7 @@ services:
       retries: 5
 
   backend:
-    build: ./backend
+    image: akhil18133/magic-square-backend-image:latest
     environment:
       FLASK_APP: app
       FLASK_ENV: development
@@ -31,7 +31,7 @@ services:
         condition: service_healthy
 
   frontend:
-    build: ./frontend
+    image: akhil18133/magic-square-frontend-image:latest
     ports:
       - "3000:80"
 
