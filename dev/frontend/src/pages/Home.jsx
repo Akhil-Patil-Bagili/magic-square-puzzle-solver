@@ -2,6 +2,7 @@ import { Appbar } from "../components/Appbar";
 import wip from "../assets/wip.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_ENDPOINTS } from "../apiConfig";
 
 
 export const Home = () => {
@@ -16,7 +17,7 @@ export const Home = () => {
 
         const fetchData = async () => {
             try {
-                const userResponse = await axios.get("http://localhost:3000/api/users/me", {
+                const userResponse = await axios.get(API_ENDPOINTS.profile, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setUser(userResponse.data); 
