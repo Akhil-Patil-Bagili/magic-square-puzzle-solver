@@ -31,7 +31,7 @@ Before you begin, ensure you have the following installed:
 
 2. **Navigate to Project Directory**
     ```bash
-    cd magic-square-puzzle-solver
+    cd dev
     ```
 
 3. **Build and Run with Docker Compose**
