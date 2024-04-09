@@ -2,51 +2,116 @@
 
 ## Description
 
-* Magic Square Puzzle Solver is an engaging web application designed to challenge users to solve magic square puzzles. It aims to provide a fun, interactive way for users to engage with one of the oldest mathematical puzzles known to offer complexity and challenge.
+Magic Square Puzzle Solver is an engaging web application that challenges users to solve magic square puzzles. It combines fun and interactivity, allowing users to delve into one of the most ancient and complex mathematical puzzles.
 
-### Github URL
+## Quick Links
 
-* `https://github.com/Akhil-Patil-Bagili/magic-square-puzzle-solver`
+- **GitHub Repository:** [View on GitHub](https://github.com/Akhil-Patil-Bagili/magic-square-puzzle-solver)
 
-## Milestones with deadlines
+## Getting Started
 
-* **Week 1:** Setup repo and Flask application, start puzzle generation strategy.
-* **Week 2:** Implement the magic square generation algorithm for puzzles and basic user interaction.
-* **Week 3:** Build the frontend interaction with React.
-* **Week 4:** Improving the algorithm for dynamic puzzle generation.
-* **Week 5:** Testing, feedback integration, and UI enhancements.
+These instructions will guide you on how to get a copy of the project up and running on your local machine for development and testing purposes. You have the option to run the project using Docker (recommended for its simplicity) or manually setting it up locally.
 
-## Algorithms/AI schemes
+### Prerequisites
 
-The core engine of the Magic Square Puzzle Solver involves algorithms to generate magic squares and validate user solutions based on the magic square rules.
+Before you begin, ensure you have the following installed:
+- Git
+- Docker (for Docker setup)
+- Python 3.8 or higher (for local setup)
+- Node.js and npm (for local setup)
 
-### Magic Square Generation:
+### Setup and Running
 
-* Utilizes a combination of mathematical techniques to generate solvable magic square puzzles. The method ensures that each row, column, and diagonal sum to the same constant.
+#### Option 1: Docker Setup (Recommended)
 
-### Solution Validation:
+1. **Clone the Repository**
+    ```bash
+    git clone https://github.com/Akhil-Patil-Bagili/magic-square-puzzle-solver.git
+    ```
 
-* Implements logic to check user solutions in real-time, offering immediate feedback on the correctness of their attempts, encouraging learning and exploration.
+2. **Navigate to Project Directory**
+    ```bash
+    cd magic-square-puzzle-solver
+    ```
 
-## Marketspace / Selling point
-### Market Space:
+3. **Build and Run with Docker Compose**
+    ```bash
+    docker-compose up --build
+    ```
 
-* The Magic Square Puzzle Solver is positioned within the educational games market, targeting puzzle enthusiasts and learners of all ages. Its digital approach to the classic puzzle aims to make learning math concepts enjoyable and accessible to a broad audience.
+4. **Access the Application**
+    The web application will be available at [http://localhost:3000](http://localhost:3000).
 
-### Selling Points:
+#### Option 2: Local Setup
 
-* **Interactive and Educational Gameplay:** Offers a unique blend of education and entertainment, enhancing problem-solving, mathematical, and logical thinking skills.
-* **User-Friendly Interface:** Designed with simplicity and ease of use in mind, making it accessible to users with various levels of tech savviness.
-* **Adaptive Difficulty Levels:** Features puzzles of varying sizes and complexities, catering to both beginners and experienced puzzle solvers.
-* **Instant Feedback Mechanism:** Provides users with immediate validation of their puzzle solutions, enhancing the learning experience.
-* **Engagement and Community:** Encourages users to challenge themselves and others, fostering a community of puzzle enthusiasts.
+**Backend Setup:**
+
+1. Navigate to the backend directory:
+    ```bash
+    cd dev/backend
+    ```
+
+2. Create and activate a virtual environment:
+    ```bash
+    python -m venv venv
+    .\venv\Scripts\activate # On Windows
+    source venv/bin/activate # On Unix/macOS
+    ```
+
+3. Install the dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+4. Run the backend server:
+    ```bash
+    flask run
+    ```
+
+**Frontend Setup:**
+
+1. Navigate to the frontend directory:
+    ```bash
+    cd dev/frontend
+    ```
+
+2. Install the dependencies:
+    ```bash
+    npm install
+    ```
+
+3. Start the frontend development server:
+    ```bash
+    npm run dev
+    ```
+
+4. The web application will be available at [http://localhost:3000](http://localhost:3000).
+
+## Project Milestones
+
+- **Week 1:** Setup repository and Flask application. Begin puzzle generation strategy development.
+- **Week 2:** Implement magic square generation algorithm and basic user interaction.
+- **Week 3:** Develop frontend interactions using React.
+- **Week 4:** Enhance the algorithm for dynamic puzzle generation.
+- **Week 5:** Conduct testing, integrate feedback, and enhance UI.
+
+## Algorithms and AI Schemes
+
+- **Magic Square Generation:** Employs mathematical techniques to generate solvable puzzles, ensuring each row, column, and diagonal sum to the same constant.
+- **Solution Validation:** Provides real-time feedback on user attempts, validating puzzle solutions.
+
+## Market Space and Unique Selling Points
+
+- **Engaging Gameplay:** Combines education and entertainment, improving problem-solving, and mathematical skills.
+- **Accessible Interface:** Designed for ease of use, accommodating users of varying technical backgrounds.
+- **Adaptive Difficulty:** Offers puzzles of different sizes and complexities, appealing to novices and experts alike.
+- **Instant Feedback:** Validates puzzle solutions instantly, enriching the user experience.
+- **Community Engagement:** Encourages a sense of community among puzzle enthusiasts.
 
 ## Authors
 
-* `Akhil Patil Bagili`
+- **Akhil Patil Bagili**
 
 ## Version History
 
-* **0.1**
-    * Initial Release
-    * See [commit change]() 
+- **0.1:** Initial Release
