@@ -23,7 +23,7 @@ Before you begin, ensure you have the following installed:
 ### Setup and Running
 
 
-#### Option 1: Local Setup
+#### Option 1: Local Setup (Recommended)
 
 
 **Backend Setup:**
@@ -69,7 +69,7 @@ Before you begin, ensure you have the following installed:
 4. The web application will be available at [http://localhost:3000](http://localhost:3000).
 
 
-#### Option 2: Docker Setup (Recommended)
+#### Option 2: Docker Setup
 
 1. **Clone the Repository**
     ```bash
