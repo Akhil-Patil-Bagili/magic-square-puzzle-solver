@@ -61,6 +61,8 @@ Before you begin, ensure you have the following installed:
     flask run
     ```
 
+**Note: Keep the terminal running and open a new terminal and navigate to the project root directory**
+
 **Frontend Setup:**
 
 1. Navigate to the frontend directory:
