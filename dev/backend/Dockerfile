@@ -14,6 +14,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY entrypoint.sh /usr/src/app
 RUN chmod +x /usr/src/app/entrypoint.sh
 
+# Debug: List files and their permissions
+RUN ls -la /usr/src/app/
+
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
