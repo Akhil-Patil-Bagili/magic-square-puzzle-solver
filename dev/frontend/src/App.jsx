@@ -24,4 +24,6 @@ function App() {
   )
 }
 
+/* this is a comment*/
+
 export default App
