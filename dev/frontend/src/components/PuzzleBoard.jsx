@@ -6,6 +6,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import axios from 'axios';
 import { API_ENDPOINTS } from '../apiConfig';
 
+
 export const PuzzleBoard = () => {
   // const initialNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   const [puzzle, setPuzzle] = useState(Array(9).fill(null));
@@ -26,24 +27,36 @@ export const PuzzleBoard = () => {
   };
 
   const handleDrop = (cellId, droppedNumber) => {
-    let newPuzzle = puzzle;
-    let temp = 0
+    setPuzzle(prevPuzzle => {
+      const newPuzzle = [...prevPuzzle];
+      const previousNumber = newPuzzle[cellId];
 
-    if(newPuzzle[cellId] === null)
-    {
       newPuzzle[cellId] = droppedNumber;
-      availableNumbers = availableNumbers.filter(num => num !== droppedNumber);
-      setAvailableNumbers(availableNumbers);
-    }
-    else{
-        temp = newPuzzle[cellId];
-        newPuzzle[cellId] = droppedNumber;
-        console.log(droppedNumber);
-        availableNumbers = availableNumbers.filter(num => num !== droppedNumber).concat(temp).sort((a, b) => a - b); 
-        setAvailableNumbers(availableNumbers);
-    }
 
-    setPuzzle(newPuzzle);  
+      setAvailableNumbers(prevAvailableNumbers => {
+        const newAvailableNumbers = prevAvailableNumbers.filter(num => num !== droppedNumber);
+        if (previousNumber !== null) {
+          newAvailableNumbers.push(previousNumber);
+        }
+        return newAvailableNumbers.sort((a, b) => a - b);
+      });
+
+      return newPuzzle;
+    });
+  };
+
+  const handleRemove = (cellId) => {
+    setPuzzle(prevPuzzle => {
+      const newPuzzle = [...prevPuzzle];
+      const numberToRemove = newPuzzle[cellId];
+      newPuzzle[cellId] = null;
+
+      if (numberToRemove !== null) {
+        setAvailableNumbers(prevAvailableNumbers => [...new Set([...prevAvailableNumbers, numberToRemove])].sort((a, b) => a - b));
+      }
+
+      return newPuzzle;
+    });
   };
 
   const submitPuzzle = async () => {
@@ -67,15 +80,21 @@ export const PuzzleBoard = () => {
       <div className="flex h-screen items-start justify-center pt-16">
         <div className="grid grid-cols-3 gap-2">
           {puzzle.map((number, index) => (
-            <DroppableCell key={index} cellId={index} onDrop={handleDrop}>
-              {number !== null && <DraggableNumber id={number} number={number} />}
-            </DroppableCell>
+             <DroppableCell key={index} cellId={index} onDrop={handleDrop} onRemove={() => handleRemove(index)}>
+             {number !== null && (
+               <DraggableNumber
+                 id={number}
+                 number={number}
+                 onRemove={() => handleRemove(index)}
+               />
+             )}
+           </DroppableCell>
           ))}
         </div>
         <div className="flex flex-col mt-16">
           <div className="flex flex-wrap justify-center gap-2 ml-12 max-w-xs">
             {availableNumbers.map((number) => (
-              puzzle.indexOf(number) === -1 && <DraggableNumber key={number} id={number} number={number} />
+              <DraggableNumber key={number} id={number} number={number} />
             ))}
           </div>
           <div className="mt-16 ml-14 pb-2 text-center">
