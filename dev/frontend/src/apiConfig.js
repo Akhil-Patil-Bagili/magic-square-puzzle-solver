@@ -6,6 +6,10 @@ export const API_ENDPOINTS = {
   login: `${API_BASE_URL}/api/users/login`,
   profile: `${API_BASE_URL}/api/users/me`,
   update: `${API_BASE_URL}/api/users/update`,
-  puzzle: `${API_BASE_URL}/api/puzzle`,
-  check: `${API_BASE_URL}/api/magic-square/check`
+  puzzleGenerate: `${API_BASE_URL}/api/puzzle/generate`,
+  check: `${API_BASE_URL}/api/magic-square/check`,
+  solution: `${API_BASE_URL}/api/puzzle/solution`,
+  hintsMagicSum: `${API_BASE_URL}/api/hints/magic-sum`,
+  hintsPartialSolution: `${API_BASE_URL}/api/hints/partial-solution`,
+  // ... add any other endpoints you need here
 };

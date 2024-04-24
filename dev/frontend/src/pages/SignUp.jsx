@@ -49,7 +49,7 @@ export const SignUp = () => {
                     <InputBox onChange={(e) => setFirstName(e.target.value)} placeholder="John" label="First Name" />
                     <InputBox onChange={(e) => setLastName(e.target.value)} placeholder="Doe" label="Last Name" />
                     <InputBox onChange={(e) => setUsername(e.target.value)} placeholder="johndoe@gmail.com" label="Email" />
-                    <InputBox onChange={(e) => setPassword(e.target.value)} placeholder="john@12345" label="Password" />
+                    <InputBox type="password" onChange={(e) => setPassword(e.target.value)} placeholder="john@12345" label="Password" />
                     <div className="pt-4">
                         <LongButton onClick={handleSubmit} label="Sign up" />
                     </div>

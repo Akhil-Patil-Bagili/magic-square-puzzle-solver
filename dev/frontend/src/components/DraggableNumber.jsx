@@ -1,4 +1,3 @@
-// DraggableNumber.jsx
 import { useDrag } from 'react-dnd';
 
 const DraggableNumber = ({ id, number, onRemove }) => {

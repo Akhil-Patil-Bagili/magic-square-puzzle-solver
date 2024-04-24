@@ -118,46 +118,86 @@ def init_routes(app):
     #         return jsonify({"message": "Sorry, that's not a magic square. Try again!"}), 200
 
 
+    # def generate_magic_square():
+    #     """
+    #     This function generates a 3x3 magic square.
+    #     A 3x3 magic square always results in a sum of 15 for all rows, columns, and diagonals.
+    #     """
+    #     magic_square = np.array([[8, 1, 6],
+    #                             [3, 5, 7],
+    #                             [4, 9, 2]])
+    #     return magic_square
+
+    # def adjust_numbers_for_level(level):
+    #     """
+    #     Adjusts the numbers in the magic square according to the level.
+    #     """
+    #     magic_square = generate_magic_square()
+    #     if level == 1:
+    #         adjustment_factor = range(1, 20)
+    #     elif level == 2:
+    #         adjustment_factor = range(20, 50)
+    #     elif level == 3:
+    #         adjustment_factor = range(50, 100)
+    #     else:  # level 4
+    #         adjustment_factor = range(100, 200)
+        
+    #     # Generate a list of unique numbers from the specified range
+    #     numbers = random.sample(adjustment_factor, 9)
+    #     # Map these numbers onto the magic square based on their rank (sorted position)
+    #     ranking = np.argsort(numbers)
+    #     adjusted_square = np.zeros_like(magic_square)
+    #     for rank, value in enumerate(np.nditer(magic_square)):
+    #         adjusted_square[np.where(magic_square == value)] = numbers[ranking[rank]]
+        
+    #     return adjusted_square.flatten().tolist()
+    
+
     def generate_magic_square():
         """
         This function generates a 3x3 magic square.
         A 3x3 magic square always results in a sum of 15 for all rows, columns, and diagonals.
         """
-        magic_square = np.array([[8, 1, 6],
-                                [3, 5, 7],
-                                [4, 9, 2]])
-        return magic_square
+        return np.array([[8, 1, 6],
+                        [3, 5, 7],
+                        [4, 9, 2]])
 
     def adjust_numbers_for_level(level):
         """
         Adjusts the numbers in the magic square according to the level.
         """
         magic_square = generate_magic_square()
-        if level == 1:
-            adjustment_factor = range(1, 20)
-        elif level == 2:
-            adjustment_factor = range(20, 50)
-        elif level == 3:
-            adjustment_factor = range(50, 100)
-        else:  # level 4
-            adjustment_factor = range(100, 200)
-        
-        # Generate a list of unique numbers from the specified range
-        numbers = random.sample(adjustment_factor, 9)
-        # Map these numbers onto the magic square based on their rank (sorted position)
-        ranking = np.argsort(numbers)
-        adjusted_square = np.zeros_like(magic_square)
-        for rank, value in enumerate(np.nditer(magic_square)):
-            adjusted_square[np.where(magic_square == value)] = numbers[ranking[rank]]
-        
-        return adjusted_square.flatten().tolist()
+        # Determine the multiplier and offset based on the level
+        if level == 1:  # Easy level
+            multiplier, offset = 1, random.randint(0, 10)  # Offset to adjust within range 1-30
+        else:  # Medium level
+            multiplier, offset = 2, random.randint(30, 49)  # Adjust to have values roughly between 31 and 80
+
+        # Apply the transformation
+        adjusted_square = (magic_square * multiplier) + offset
+
+        return adjusted_square
+
+    # Example usage
+    easy_magic_square = adjust_numbers_for_level(1)
+    medium_magic_square = adjust_numbers_for_level(2)
+
+    print("Easy Level Magic Square:")
+    print(easy_magic_square)
+    print("\nMedium Level Magic Square:")
+    print(medium_magic_square)
 
     @app.route('/api/puzzle/generate', methods=['GET'])
     def generate_puzzle():
-        level = request.args.get('level', default=1, type=int)
-        level = max(1, min(level, 4))
-        numbers = adjust_numbers_for_level(level)
-        return jsonify({"numbers": numbers, "level": level})
+        try:
+            level = request.args.get('level', default=1, type=int)
+            level = max(1, min(level, 2))  # Adjust to only have levels 1 (easy) and 2 (medium)
+            numbers = adjust_numbers_for_level(level)
+            print(numbers)
+            return jsonify({"numbers": numbers.tolist(), "level": level})
+        except Exception as e:
+            app.logger.error(f"Failed to generate puzzle: {str(e)}")
+            return jsonify({"error": "Internal server error"}), 500
 
     @app.route('/api/magic-square/check', methods=['POST'])
     def check_solution():
@@ -167,9 +207,115 @@ def init_routes(app):
         if not matrix or not all(len(row) == 3 for row in matrix) or len(matrix) != 3:
             return jsonify({"error": "Invalid matrix size"}), 400
 
-        # Flatten the matrix to simplify checking
+            # Flatten the matrix to simplify checking
         flat_matrix = [num for row in matrix for num in row]
         if check_magic_square(np.array(flat_matrix).reshape(3, 3)):
             return jsonify({"message": "Congratulations, it's a magic square!"}), 200
         else:
             return jsonify({"message": "Sorry, that's not a magic square. Try again!"}), 200
+    
+    # @app.route('/api/puzzle/solution', methods=['GET'])
+    # def reveal_solution():
+    #     try:
+    #         level = request.args.get('level', default=1, type=int)
+    #         app.logger.debug(f'Requesting solution for level: {level}')  # Log the level
+    #         level = max(1, min(level, 2))  
+    #         solution = adjust_numbers_for_level(level)
+    #         app.logger.debug(f'Solution generated: {solution}')  # Log the solution
+    #         return jsonify({"solution": solution.tolist()})
+    #     except Exception as e:
+    #         app.logger.error(f"Failed to reveal solution: {str(e)}")
+    #         return jsonify({"error": "Internal server error"}), 
+
+    @app.route('/api/puzzle/solution', methods=['GET'])
+    def reveal_solution():
+        try:
+            level = request.args.get('level', default=1, type=int)
+            solution = adjust_numbers_for_level(level)
+            return jsonify({"solution": solution.tolist()})
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+    
+   
+    @app.route('/api/hints/magic-sum', methods=['GET'])
+    def get_magic_sum():
+        try:
+            level = request.args.get('level', type=int, default=1)
+            adjusted_square = adjust_numbers_for_level(level)
+            magic_sum = np.sum(adjusted_square[0])  # Calculate the sum of the first row
+            return jsonify({"magicSum": magic_sum})
+        except Exception as e:
+            app.logger.error(f"Error generating magic sum: {str(e)}")
+            return jsonify({"error": "Internal server error"}), 500
+
+        
+    # @app.route('/api/hints/partial-solution', methods=['GET'])
+    # def get_partial_solution():
+    #     level = request.args.get('level', default=1, type=int)
+    #     adjusted_square = adjust_numbers_for_level(level)
+    #     partial_solution = adjusted_square.copy()
+    #     # Here, randomly select a few cells to reveal based on difficulty
+    #     num_reveals = 3  # or based on level
+    #     for _ in range(num_reveals):
+    #         i, j = np.random.randint(0, 3, size=2)
+    #         partial_solution[i][j] = None  # Set some cells to None to hide them
+    #     return jsonify({"partialSolution": partial_solution.tolist()})
+    
+    @app.route('/api/hints/partial-solution', methods=['GET'])
+    def get_partial_solution():
+        try:
+            level = request.args.get('level', default=1, type=int)
+            adjusted_square = adjust_numbers_for_level(level).tolist()  # Convert to list first
+
+            # Here, randomly select a few cells to hide based on difficulty
+            num_reveals = 3  # or based on level
+            hidden_value = None  # For hiding empty cells
+            revealed_indices = set()
+            while len(revealed_indices) < num_reveals:
+                i, j = np.random.randint(0, 3, size=2)
+                revealed_indices.add((i, j))  # Ensure unique cells are chosen
+
+            for i in range(3):
+                for j in range(3):
+                    if (i, j) not in revealed_indices:
+                        adjusted_square[i][j] = hidden_value  # Hide the cell
+
+            return jsonify({"partialSolution": adjusted_square})
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+
+
+
+
+    # def generate_magic_square():
+    #     """Generates a basic 3x3 magic square."""
+    #     return np.array([[8, 1, 6], [3, 5, 7], [4, 9, 2]])
+
+    # def adjust_numbers_for_level(level):
+    #     """Adjust numbers in the magic square based on the level with random multipliers and offsets."""
+    #     magic_square = generate_magic_square()
+    #     multiplier = 2 if level > 1 else 1
+    #     offset = random.randint(1, 10) * level
+    #     adjusted_square = (magic_square * multiplier) + offset
+    #     return adjusted_square.tolist()  # Convert to list to allow modifications like None
+
+    # @app.route('/api/hints/magic-sum', methods=['GET'])
+    # def get_magic_sum():
+    #     """Endpoint to get the magic sum based on difficulty level."""
+    #     level = request.args.get('level', type=int, default=1)
+    #     adjusted_square = adjust_numbers_for_level(level)
+    #     magic_sum = sum(adjusted_square[0])  # Sum of the first row as the magic sum
+    #     return jsonify({"magicSum": magic_sum})
+
+    # @app.route('/api/hints/partial-solution', methods=['GET'])
+    # def get_partial_solution():
+    #     """Endpoint to get a partial solution by revealing some cells and hiding others."""
+    #     level = request.args.get('level', type=int, default=1)
+    #     adjusted_square = adjust_numbers_for_level(level)
+    #     num_reveals = 5 if level == 1 else 3  # More reveals for easier level
+    #     revealed_indices = random.sample(range(9), num_reveals)
+    #     partial_solution = [None] * 9
+    #     for index in revealed_indices:
+    #         partial_solution[index] = adjusted_square[index // 3][index % 3]
+    #     return jsonify({"partialSolution": partial_solution})
