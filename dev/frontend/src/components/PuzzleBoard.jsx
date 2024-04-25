@@ -7,10 +7,22 @@ import axios from 'axios';
 import { API_ENDPOINTS } from '../apiConfig';
 import { ButtonDark } from './ButtonDark';
 import { ButtonLight } from './ButtonLight';
+import Modal from './Modal'; // Import the Modal component
 
-export const PuzzleBoard = ({ difficulty, magicSum, partialSolution }) => {
+export const PuzzleBoard = ({ difficulty, magicSum, partialSolution, isModalOpen, setIsModalOpen }) => {
     const [puzzle, setPuzzle] = useState(Array(9).fill(null));
     const [availableNumbers, setAvailableNumbers] = useState([]);
+
+
+    useEffect(() => {
+        if (magicSum !== null) {
+            setIsModalOpen(true); // Automatically open the modal when magicSum is set
+        }
+    }, [magicSum, setIsModalOpen]);
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
 
     const fetchNumbers = async () => {
         try {
@@ -100,6 +112,8 @@ export const PuzzleBoard = ({ difficulty, magicSum, partialSolution }) => {
         }
     };
 
+    
+
     return (
         <DndProvider backend={HTML5Backend}>
             <div className="flex h-screen items-start justify-center pt-4">
@@ -127,14 +141,15 @@ export const PuzzleBoard = ({ difficulty, magicSum, partialSolution }) => {
                             <ButtonLight onClick={submitPuzzle} label="Submit"/>
                             <ButtonLight onClick={handleClear} label="Clear" style={{ marginLeft: '20px' }}/>
                         </div>
-                        <div className="flex justify-center w-full">
-                          {magicSum !== null && (
-                                  <div className="text-lg font-bold">Magic Sum: {magicSum}</div>
-                              )}
-                            <ButtonDark onClick={revealSolution} label="Reveal Solution"/>
-                        </div>
+                        <ButtonDark onClick={revealSolution} label="Reveal Solution"/>
                     </div>
                 </div>
+                {isModalOpen && (
+                    <Modal onClose={closeModal}>
+                        <h3 className="text-lg font-bold mb-4">Magic Sum</h3>
+                        <p>The magic sum is: {magicSum}</p>
+                    </Modal>
+                )}
             </div>
         </DndProvider>
     );

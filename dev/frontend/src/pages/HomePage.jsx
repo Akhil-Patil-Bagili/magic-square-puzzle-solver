@@ -1,5 +1,5 @@
 import { Appbar } from "../components/Appbar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { PuzzleBoard } from "../components/PuzzleBoard";
 import { API_ENDPOINTS } from "../apiConfig";
@@ -8,9 +8,12 @@ export const HomePage = () => {
     const [user, setUser] = useState({});
     const [difficulty, setDifficulty] = useState(1);
     const [showHintOptions, setShowHintOptions] = useState(false);
-    const [selectedHint, setSelectedHint] = useState('');
+    const [showDifficultyOptions, setShowDifficultyOptions] = useState(false);
     const [magicSum, setMagicSum] = useState(null);
     const [partialSolution, setPartialSolution] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const hintRef = useRef(null);
+    const difficultyRef = useRef(null);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -34,33 +37,48 @@ export const HomePage = () => {
     }, []);
 
     useEffect(() => {
-        if (selectedHint === "magicSum") {
+        const handleClickOutside = (event) => {
+            if (hintRef.current && !hintRef.current.contains(event.target)) {
+                setShowHintOptions(false);
+            }
+            if (difficultyRef.current && !difficultyRef.current.contains(event.target)) {
+                setShowDifficultyOptions(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const handleHintSelection = (hintType) => {
+        setShowHintOptions(false);
+        if (hintType === 'magicSum') {
             fetchMagicSum();
-        } else if (selectedHint === "partialSolution") {
+        } else if (hintType === 'partialSolution') {
             fetchPartialSolution();
         }
-    }, [selectedHint]);
+    };
+
 
     const fetchMagicSum = async () => {
         try {
             const response = await axios.get(`${API_ENDPOINTS.hintsMagicSum}?level=${difficulty}`);
-            if (response.data.magicSum) {
+            if (response.data && response.data.magicSum !== undefined) {
                 setMagicSum(response.data.magicSum);
+                setIsModalOpen(true);
             } else {
                 throw new Error('No magic sum received');
             }
         } catch (error) {
             console.error("Error fetching magic sum:", error);
-            alert("Failed to fetch magic sum.");
+            alert("Failed to fetch magic sum. Please try again.");
         }
     };
-    
+
     const fetchPartialSolution = async () => {
         try {
             const response = await axios.get(`${API_ENDPOINTS.hintsPartialSolution}?level=${difficulty}`);
             if (response.data && response.data.partialSolution) {
-                const res = response.data.partialSolution
-                setPartialSolution(res.flat()); // Assuming partialSolution is correctly structured
+                setPartialSolution(response.data.partialSolution.flat());
             } else {
                 throw new Error("Invalid data structure for partial solution");
             }
@@ -69,7 +87,6 @@ export const HomePage = () => {
             alert("Failed to fetch partial solution: " + (error.response?.data?.message || error.message));
         }
     };
-    
 
     return (
         <div>
@@ -83,29 +100,33 @@ export const HomePage = () => {
                         </div>
                     </div>
                     <div className="text-center mt-4 mb-2">
-                        <select onChange={(e) => setDifficulty(e.target.value)} className="text-center rounded-lg bg-gray-200 p-2 cursor-pointer">
-                            <option value="1">Easy</option>
-                            <option value="2">Medium</option>
-                            <option value="3">Hard (Coming Soon)</option>
-                        </select>
-                        <div className="inline-block ml-4 relative">
-                            <button onClick={() => setShowHintOptions(!showHintOptions)} className="bg-gray-200 p-2 rounded-lg cursor-pointer">
-                                Select Hint
+                        <div className="inline-block relative" ref={difficultyRef}>
+                            <button onClick={() => setShowDifficultyOptions(!showDifficultyOptions)} className="bg-gray-200 p-2 rounded-lg cursor-pointer hover:bg-gray-300">
+                                Difficulty: {['Easy', 'Medium', 'Hard'][difficulty - 1]}
+                            </button>
+                            {showDifficultyOptions && (
+                                <ul className="absolute bg-gray-100 mt-1 w-40 rounded-lg overflow-hidden shadow-md text-left z-10">
+                                    <li className="px-4 py-2 hover:bg-gray-300 cursor-pointer" onClick={() => { setDifficulty(1); setShowDifficultyOptions(false); }}>Easy</li>
+                                    <li className="px-4 py-2 hover:bg-gray-300 cursor-pointer" onClick={() => { setDifficulty(2); setShowDifficultyOptions(false); }}>Medium</li>
+                                    <li className="px-4 py-2 hover:bg-gray-300 cursor-pointer" onClick={() => { setDifficulty(3); setShowDifficultyOptions(false); }}>Hard (Coming Soon)</li>
+                                </ul>
+                            )}
+                        </div>
+                        <div className="inline-block ml-4 relative" ref={hintRef}>
+                            <button onClick={() => setShowHintOptions(!showHintOptions)} className="bg-gray-200 p-2 rounded-lg cursor-pointer hover:bg-gray-300">
+                                Hints
                             </button>
                             {showHintOptions && (
-                                <ul className="absolute bg-gray-100 mt-1 w-40 rounded-lg overflow-hidden shadow-md text-left">
-                                    <li className="px-4 py-2 hover:bg-gray-300 cursor-pointer" onClick={() => { setSelectedHint('magicSum'); setShowHintOptions(false); }}>Magic Sum</li>
-                                    <li className="px-4 py-2 hover:bg-gray-300 cursor-pointer" onClick={() => { setSelectedHint('partialSolution'); setShowHintOptions(false); }}>Partial Solution</li>
+                                <ul className="absolute bg-gray-100 mt-1 w-40 rounded-lg overflow-hidden shadow-md text-left z-10">
+                                    <li className="px-4 py-2 hover:bg-gray-300 cursor-pointer" onClick={() => handleHintSelection('magicSum')}>Magic Sum</li>
+                                    <li className="px-4 py-2 hover:bg-gray-300 cursor-pointer" onClick={() => handleHintSelection('partialSolution')}>Partial Solution</li>
                                 </ul>
                             )}
                         </div>
                     </div>
                 </div>
-                <PuzzleBoard difficulty={difficulty} magicSum={magicSum} partialSolution={partialSolution} />
-                <div className="pt-10 pb-2 text-center">
-                    <button className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700">Start</button>
-                </div>
+                <PuzzleBoard difficulty={difficulty} magicSum={magicSum} partialSolution={partialSolution} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}  />
             </div>
         </div>
     );
-}
+};
