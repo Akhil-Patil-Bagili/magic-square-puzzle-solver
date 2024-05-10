@@ -13,16 +13,21 @@ export const PuzzleBoard = ({ difficulty, magicSum, partialSolution, isModalOpen
     const initialGridSize = difficulty === 3 ? 16 : 9;
     const [puzzle, setPuzzle] = useState(Array(9).fill(null));
     const [availableNumbers, setAvailableNumbers] = useState([]);
+    const [modalMessage, setModalMessage] = useState('');
+    const [isError, setIsError] = useState(false);
+    const [showMagicSum, setShowMagicSum] = useState(false);
 
 
     useEffect(() => {
         if (magicSum !== null) {
-            setIsModalOpen(true); // Automatically open the modal when magicSum is set
+            setShowMagicSum(true);
+            setIsModalOpen(true);
         }
     }, [magicSum, setIsModalOpen]);
 
     const closeModal = () => {
         setIsModalOpen(false);
+        setShowMagicSum(false);
     };
 
     const fetchNumbers = async () => {
@@ -33,8 +38,9 @@ export const PuzzleBoard = ({ difficulty, magicSum, partialSolution, isModalOpen
             setPuzzle(Array(size).fill(null)); // Reset the puzzle with the correct size
             setAvailableNumbers(numbers.flat());
         } catch (error) {
-            console.error("Error fetching new numbers:", error);
-            alert("Error fetching new numbers. Please try again.");
+            setModalMessage("Error fetching new numbers. Please try again.");
+            setIsError(true);
+            setIsModalOpen(true);
         }
     };
 
@@ -44,9 +50,9 @@ export const PuzzleBoard = ({ difficulty, magicSum, partialSolution, isModalOpen
 
     useEffect(() => {
         if (partialSolution && partialSolution.length > 0) {
-            setPuzzle(partialSolution); // Set the puzzle grid with partial solution numbers
-            const usedNumbers = new Set(partialSolution.filter(num => num !== null)); // Create a set of numbers already used in the partial solution
-            setAvailableNumbers(prev => prev.filter(num => !usedNumbers.has(num))); // Filter these numbers out of the available numbers
+            setPuzzle(partialSolution); 
+            const usedNumbers = new Set(partialSolution.filter(num => num !== null)); 
+            setAvailableNumbers(prev => prev.filter(num => !usedNumbers.has(num))); 
         }
     }, [partialSolution]);
 
@@ -101,11 +107,14 @@ export const PuzzleBoard = ({ difficulty, magicSum, partialSolution, isModalOpen
                 setAvailableNumbers([]);
                 resetPartialSolutionFetched();  // Clear available numbers since the puzzle is solved
             } else {
-                throw new Error('Failed to fetch the solution');
+                setModalMessage("Error fetching the solution. Please try again.");
+                setIsError(true);
+                setIsModalOpen(true);
             }
         } catch (error) {
-            console.error("Error fetching the solution:", error);
-            alert("Error fetching the solution. Please try again.");
+            setModalMessage("Error fetching the solution. Please try again.");
+            setIsError(true);
+            setIsModalOpen(true);
         }
     };
 
@@ -117,11 +126,14 @@ export const PuzzleBoard = ({ difficulty, magicSum, partialSolution, isModalOpen
         }
         try {
             const response = await axios.post(API_ENDPOINTS.check, { matrix });
-            alert(response.data.message);
+            setModalMessage(response.data.message);
+            setIsError(false);
+            setIsModalOpen(true);
             resetPartialSolutionFetched();
         } catch (error) {
-            alert("Error submitting the puzzle. Please try again.");
-            console.error("Error submitting the puzzle:", error);
+            setModalMessage("Error submitting the puzzle. Please try again.");
+            setIsError(true);
+            setIsModalOpen(true);
         }
     };
 
@@ -160,8 +172,8 @@ export const PuzzleBoard = ({ difficulty, magicSum, partialSolution, isModalOpen
                 </div>
                 {isModalOpen && (
                     <Modal onClose={closeModal}>
-                        <h3 className="text-lg font-bold mb-4">Magic Sum</h3>
-                        <p>The magic sum is: {magicSum}</p>
+                        <h3 className="text-lg font-bold mb-4">{isError ? 'Error' : showMagicSum ? 'Magic Sum' : 'Message'}</h3>
+                        <p>{isError || !showMagicSum ? modalMessage : `The magic sum is: ${magicSum}`}</p>
                     </Modal>
                 )}
             </div>

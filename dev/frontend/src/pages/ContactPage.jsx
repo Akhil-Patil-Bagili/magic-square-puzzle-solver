@@ -15,7 +15,7 @@ export const ContactPage = () => {
                 <div className="flex flex-col items-center">
                     <div className="text-lg text-gray-700 mb-4">
                         <span>Email me at: </span>
-                        <a href="mailto:akhilpatil12345@gmail.com" className="text-blue-500" target="_blank" rel="noopener noreferrer">akhilpatil12345@gmail.com</a>
+                        <a href="mailto:akhilpatilbagili@gmail.com" className="text-blue-500" target="_blank" rel="noopener noreferrer">akhilpatilbagili@gmail.com</a>
                     </div>
                     <div className="mt-6">
                         <h3 className="text-2xl font-semibold">Connect with Me</h3>

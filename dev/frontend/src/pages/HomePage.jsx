@@ -110,7 +110,7 @@ export const HomePage = () => {
                     </div>
                     <div className="text-center mt-4 mb-2">
                         <div className="inline-block relative" ref={difficultyRef}>
-                            <button onClick={() => setShowDifficultyOptions(!showDifficultyOptions)} className="bg-gray-200 p-2 rounded-lg cursor-pointer hover:bg-gray-300">
+                            <button onClick={() => {setShowDifficultyOptions(!showDifficultyOptions);setPartialSolutionFetched(false);}} className="bg-gray-200 p-2 rounded-lg cursor-pointer hover:bg-gray-300">
                                 Difficulty: {['Easy', 'Medium', 'Hard'][difficulty - 1]}
                             </button>
                             {showDifficultyOptions && (

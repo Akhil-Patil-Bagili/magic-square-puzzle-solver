@@ -1,15 +1,16 @@
-export function InputBox({ label, placeholder, onChange, name, value, type = "text" }) {
+export function InputBox({ label, placeholder, onChange, name, value, type = "text", autocomplete }) {
     return (
         <div>
             <div className="text-sm font-medium text-left py-2">
                 {label}
             </div>
             <input
-                type={type} // Use the type prop here
+                type={type} 
                 name={name}
                 value={value}
                 onChange={onChange}
                 placeholder={placeholder}
+                autoComplete={autocomplete}
                 className="w-full px-2 py-1 border rounded border-slate-200"
             />
         </div>

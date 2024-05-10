@@ -7,7 +7,6 @@ import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
 import { HomePage } from "./pages/HomePage";
 import { Profile } from "./pages/Profile";
-import { Home } from "./pages/Home";
 import { AboutPage } from './pages/AboutPage';
 import {ContactPage } from './pages/ContactPage';
 
@@ -53,7 +52,6 @@ function RoutesWithInterceptors() {
             <Route path="/signup" element={<SignUp />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/homepage" element={<Home />} />
             <Route path="/about" element={<AboutPage />}/>
             <Route path="/contact" element={<ContactPage />}/>
         </Routes>
