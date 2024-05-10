@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: Lz0aHmKt9Bhs
       POSTGRES_DB: msps-db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U msps-db_owner -d msps-db"]
       interval: 10s
@@ -17,7 +17,7 @@ services:
       retries: 5
 
   backend:
-    build: ./backend
+    image: akhil18133/magic-square-backend-image:latest
     environment:
       FLASK_APP: app
       FLASK_ENV: development
@@ -31,7 +31,7 @@ services:
         condition: service_healthy
 
   frontend:
-    build: ./frontend
+    image: akhil18133/magic-square-frontend-image:latest
     ports:
       - "3000:80"
 
