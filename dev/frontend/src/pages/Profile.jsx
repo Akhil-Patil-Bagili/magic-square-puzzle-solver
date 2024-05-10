@@ -44,7 +44,7 @@ export const Profile = () => {
         const token = localStorage.getItem('token');
         try {
             await axios.put(API_ENDPOINTS.update, editedUser, {
-                headers: { Authorization: `Bearer ${token}` }
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
             });
             alert("Profile updated successfully!");
             setEditMode(false); 

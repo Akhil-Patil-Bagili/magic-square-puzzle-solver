@@ -11,6 +11,7 @@ export const HomePage = () => {
     const [showDifficultyOptions, setShowDifficultyOptions] = useState(false);
     const [magicSum, setMagicSum] = useState(null);
     const [partialSolution, setPartialSolution] = useState([]);
+    const [partialSolutionFetched, setPartialSolutionFetched] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const hintRef = useRef(null);
     const difficultyRef = useRef(null);
@@ -55,6 +56,7 @@ export const HomePage = () => {
             fetchMagicSum();
         } else if (hintType === 'partialSolution') {
             fetchPartialSolution();
+            setPartialSolutionFetched(true);
         }
     };
 
@@ -75,17 +77,24 @@ export const HomePage = () => {
     };
 
     const fetchPartialSolution = async () => {
-        try {
-            const response = await axios.get(`${API_ENDPOINTS.hintsPartialSolution}?level=${difficulty}`);
-            if (response.data && response.data.partialSolution) {
-                setPartialSolution(response.data.partialSolution.flat());
-            } else {
-                throw new Error("Invalid data structure for partial solution");
+        if (!partialSolutionFetched) {
+            try {
+                const response = await axios.get(`${API_ENDPOINTS.hintsPartialSolution}?level=${difficulty}`);
+                if (response.data && response.data.partialSolution) {
+                    setPartialSolution(response.data.partialSolution.flat());
+                    setPartialSolutionFetched(true);  // Lock fetching further partial solutions
+                } else {
+                    throw new Error("Invalid data structure for partial solution");
+                }
+            } catch (error) {
+                console.error("Error fetching partial solution:", error);
+                alert("Failed to fetch partial solution: " + (error.response?.data?.message || error.message));
             }
-        } catch (error) {
-            console.error("Error fetching partial solution:", error);
-            alert("Failed to fetch partial solution: " + (error.response?.data?.message || error.message));
         }
+    };
+
+    const handleResetPartialSolution = () => {
+        setPartialSolutionFetched(false);
     };
 
     return (
@@ -108,7 +117,7 @@ export const HomePage = () => {
                                 <ul className="absolute bg-gray-100 mt-1 w-40 rounded-lg overflow-hidden shadow-md text-left z-10">
                                     <li className="px-4 py-2 hover:bg-gray-300 cursor-pointer" onClick={() => { setDifficulty(1); setShowDifficultyOptions(false); }}>Easy</li>
                                     <li className="px-4 py-2 hover:bg-gray-300 cursor-pointer" onClick={() => { setDifficulty(2); setShowDifficultyOptions(false); }}>Medium</li>
-                                    <li className="px-4 py-2 hover:bg-gray-300 cursor-pointer" onClick={() => { setDifficulty(3); setShowDifficultyOptions(false); }}>Hard (Coming Soon)</li>
+                                    <li className="px-4 py-2 hover:bg-gray-300 cursor-pointer" onClick={() => { setDifficulty(3); setShowDifficultyOptions(false); }}>Hard</li>
                                 </ul>
                             )}
                         </div>
@@ -119,13 +128,13 @@ export const HomePage = () => {
                             {showHintOptions && (
                                 <ul className="absolute bg-gray-100 mt-1 w-40 rounded-lg overflow-hidden shadow-md text-left z-10">
                                     <li className="px-4 py-2 hover:bg-gray-300 cursor-pointer" onClick={() => handleHintSelection('magicSum')}>Magic Sum</li>
-                                    <li className="px-4 py-2 hover:bg-gray-300 cursor-pointer" onClick={() => handleHintSelection('partialSolution')}>Partial Solution</li>
+                                    <li className={`px-4 py-2 hover:bg-gray-300 cursor-pointer ${partialSolutionFetched ? 'text-gray-500 cursor-not-allowed' : ''}`} onClick={() => handleHintSelection('partialSolution')}>Partial Solution</li>
                                 </ul>
                             )}
                         </div>
                     </div>
                 </div>
-                <PuzzleBoard difficulty={difficulty} magicSum={magicSum} partialSolution={partialSolution} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}  />
+                <PuzzleBoard difficulty={difficulty} magicSum={magicSum} partialSolution={partialSolution} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} resetPartialSolutionFetched={handleResetPartialSolution} />
             </div>
         </div>
     );

@@ -9,7 +9,8 @@ import { ButtonDark } from './ButtonDark';
 import { ButtonLight } from './ButtonLight';
 import Modal from './Modal'; // Import the Modal component
 
-export const PuzzleBoard = ({ difficulty, magicSum, partialSolution, isModalOpen, setIsModalOpen }) => {
+export const PuzzleBoard = ({ difficulty, magicSum, partialSolution, isModalOpen, setIsModalOpen, resetPartialSolutionFetched }) => {
+    const initialGridSize = difficulty === 3 ? 16 : 9;
     const [puzzle, setPuzzle] = useState(Array(9).fill(null));
     const [availableNumbers, setAvailableNumbers] = useState([]);
 
@@ -28,7 +29,9 @@ export const PuzzleBoard = ({ difficulty, magicSum, partialSolution, isModalOpen
         try {
             const response = await axios.get(`${API_ENDPOINTS.puzzleGenerate}?level=${difficulty}`);
             const numbers = response.data.numbers;
-            setAvailableNumbers(numbers.flat()); // Flatten the array to store individual numbers
+            const size = response.data.size * response.data.size;
+            setPuzzle(Array(size).fill(null)); // Reset the puzzle with the correct size
+            setAvailableNumbers(numbers.flat());
         } catch (error) {
             console.error("Error fetching new numbers:", error);
             alert("Error fetching new numbers. Please try again.");
@@ -41,7 +44,9 @@ export const PuzzleBoard = ({ difficulty, magicSum, partialSolution, isModalOpen
 
     useEffect(() => {
         if (partialSolution && partialSolution.length > 0) {
-            setPuzzle(partialSolution);
+            setPuzzle(partialSolution); // Set the puzzle grid with partial solution numbers
+            const usedNumbers = new Set(partialSolution.filter(num => num !== null)); // Create a set of numbers already used in the partial solution
+            setAvailableNumbers(prev => prev.filter(num => !usedNumbers.has(num))); // Filter these numbers out of the available numbers
         }
     }, [partialSolution]);
 
@@ -81,8 +86,10 @@ export const PuzzleBoard = ({ difficulty, magicSum, partialSolution, isModalOpen
     };
 
     const handleClear = () => {
-        setPuzzle(Array(9).fill(null));
+        const gridSize = difficulty === 3 ? 16 : 9;
+        setPuzzle(Array(gridSize).fill(null));
         fetchNumbers();
+        resetPartialSolutionFetched();
     };
 
     const revealSolution = async () => {
@@ -91,7 +98,8 @@ export const PuzzleBoard = ({ difficulty, magicSum, partialSolution, isModalOpen
             if (response.status === 200) {
                 const res = response.data.solution
                 setPuzzle(res.flat());
-                setAvailableNumbers([]);  // Clear available numbers since the puzzle is solved
+                setAvailableNumbers([]);
+                resetPartialSolutionFetched();  // Clear available numbers since the puzzle is solved
             } else {
                 throw new Error('Failed to fetch the solution');
             }
@@ -102,10 +110,15 @@ export const PuzzleBoard = ({ difficulty, magicSum, partialSolution, isModalOpen
     };
 
     const submitPuzzle = async () => {
-        const matrix = [puzzle.slice(0, 3), puzzle.slice(3, 6), puzzle.slice(6, 9)];
+        const size = difficulty === 3 ? 4 : 3;
+        const matrix = [];
+        for (let i = 0; i < puzzle.length; i += size) {
+            matrix.push(puzzle.slice(i, i + size));
+        }
         try {
             const response = await axios.post(API_ENDPOINTS.check, { matrix });
             alert(response.data.message);
+            resetPartialSolutionFetched();
         } catch (error) {
             alert("Error submitting the puzzle. Please try again.");
             console.error("Error submitting the puzzle:", error);
@@ -117,7 +130,7 @@ export const PuzzleBoard = ({ difficulty, magicSum, partialSolution, isModalOpen
     return (
         <DndProvider backend={HTML5Backend}>
             <div className="flex h-screen items-start justify-center pt-4">
-                <div className="grid grid-cols-3 gap-2">
+                <div className={`grid ${difficulty === 3 ? 'grid-cols-4' : 'grid-cols-3'} gap-2`}>
                     {puzzle.map((number, index) => (
                         <DroppableCell key={index} cellId={index} onDrop={handleDrop} onRemove={() => handleRemove(index)}>
                             {number !== null && (
@@ -130,6 +143,7 @@ export const PuzzleBoard = ({ difficulty, magicSum, partialSolution, isModalOpen
                         </DroppableCell>
                     ))}
                 </div>
+
                 <div className="flex flex-col mt-16">
                     <div className="flex flex-wrap justify-center gap-2 ml-12 max-w-xs">
                         {availableNumbers.map((number) => (

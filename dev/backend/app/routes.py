@@ -5,6 +5,7 @@ import numpy as np
 import random
 from datetime import timedelta
 from flask import current_app
+from itertools import permutations
 
 
 def init_routes(app):
@@ -81,11 +82,15 @@ def init_routes(app):
         global generated_numbers
         try:
             level = request.args.get('level', default=1, type=int)
-            level = max(1, min(level, 2))  # Adjust to only have levels 1 (easy) and 2 (medium)
-            generated_numbers = adjust_numbers_for_level(level)
+            if level == 3:
+                generated_numbers = generate_4x4_magic_square()
+            else:
+                generated_numbers = adjust_numbers_for_level(level)
+
+            size = 4 if level == 3 else 3
             get_magic_sum()
             current_app.logger.debug(generated_numbers)
-            return jsonify({"numbers": generated_numbers.tolist(), "level": level})
+            return jsonify({"numbers": generated_numbers.tolist(), "level": level, "size": size})
         except Exception as e:
             return jsonify({"error": "Internal server error"}), 500
 
@@ -93,58 +98,76 @@ def init_routes(app):
     def check_solution():
         data = request.get_json()
         matrix = data.get('matrix')
-        if not matrix or not all(len(row) == 3 for row in matrix) or len(matrix) != 3:
+        size = len(matrix)
+
+        if not matrix or not all(len(row) == size for row in matrix) or size not in [3, 4]:
             return jsonify({"error": "Invalid matrix size"}), 400
 
         flat_matrix = [num for row in matrix for num in row]
-        if check_magic_square(np.array(flat_matrix).reshape(3, 3)):
+        if check_magic_square(np.array(flat_matrix).reshape(size, size)):
             return jsonify({"message": "Congratulations, it's a magic square!"}), 200
         else:
             return jsonify({"message": "Sorry, that's not a magic square. Try again!"}), 200
 
+    
+    def find_magic_square():
+        global generated_numbers
+        if generated_numbers is None:
+            return None, "No puzzle generated yet"
+
+        size = len(generated_numbers)  # Determine the size based on the generated_numbers
+
+        # Try to find a valid magic square by permuting the generated numbers
+        for perm in permutations(generated_numbers.flatten()):
+            if check_magic_square(np.array(perm).reshape(size, size)):
+                return np.array(perm).reshape(size, size), None
+        
+        return None, "Unable to find a valid magic square with the given numbers"
+
+    
     @app.route('/api/puzzle/solution', methods=['GET'])
     def reveal_solution():
-        try:
-            level = request.args.get('level', default=1, type=int)
-            solution = adjust_numbers_for_level(level)
-            return jsonify({"solution": solution.tolist()})
-        except Exception as e:
-            return jsonify({"error": str(e)}), 500
-    
+        solution, error = find_magic_square()
+        if error:
+            return jsonify({"error": error}), 400
+        return jsonify({"solution": solution.tolist()})
+
     @app.route('/api/hints/partial-solution', methods=['GET'])
     def get_partial_solution():
+        level = request.args.get('level', default=1, type=int)
+
         try:
-            level = request.args.get('level', default=1, type=int)
-            adjusted_square = adjust_numbers_for_level(level).tolist()
+            solution, error = find_magic_square()
+            if error:
+                return jsonify({"error": error}), 400
 
-            num_reveals = 3
-            rows = len(adjusted_square)
-            cols = len(adjusted_square[0])
-            
-            
-            all_indices = [(i, j) for i in range(rows) for j in range(cols)]
-            
-            
+            # Ensure the solution is a numpy array for uniform handling
+            if not isinstance(solution, np.ndarray):
+                solution = np.array(solution)
+
+            # Determine number of cells to reveal based on level and the size of the solution
+            num_reveals = 4 if level == 1 else (3 if level == 2 else 5)  # Adjust number of revealed cells for 4x4
+            size = int(np.sqrt(len(solution.flatten())))  # Determine grid size from the solution
+
+            # Randomly select cells to reveal
+            all_indices = [(i, j) for i in range(size) for j in range(size)]
             random.shuffle(all_indices)
-            selected_indices = []
-            rows_selected = set()
-            cols_selected = set()
+            revealed_indices = set(all_indices[:num_reveals])
 
-            for i, j in all_indices:
-                if len(selected_indices) < num_reveals and i not in rows_selected and j not in cols_selected:
-                    selected_indices.append((i, j))
-                    rows_selected.add(i)
-                    cols_selected.add(j)
+            # Construct the partial solution with some cells hidden
+            partial_solution = [
+                [int(solution[i][j]) if (i, j) in revealed_indices else None for j in range(size)]
+                for i in range(size)
+            ]
 
-            
-            for i in range(rows):
-                for j in range(cols):
-                    if (i, j) not in selected_indices:
-                        adjusted_square[i][j] = None 
-
-            return jsonify({"partialSolution": adjusted_square})
+            return jsonify({"partialSolution": partial_solution})
         except Exception as e:
-            return jsonify({"error": str(e)}), 500
+            current_app.logger.error(f"Failed to get partial solution: {str(e)}")
+            return jsonify({"error": "Internal server error", "message": str(e)}), 500
+
+
+
+
 
 
     @app.route('/api/hints/magic-sum', methods=['GET'])
@@ -165,6 +188,31 @@ def init_routes(app):
 
     def generate_magic_square():
         return np.array([[8, 1, 6], [3, 5, 7], [4, 9, 2]])
+    
+    def generate_4x4_magic_square():
+    # Start with a known 4x4 magic square
+        base_square = np.array([
+            [16, 2, 3, 13],
+            [5, 11, 10, 8],
+            [9, 7, 6, 12],
+            [4, 14, 15, 1]
+        ])
+
+        # Randomly apply rotation and reflection transformations
+        if random.choice([True, False]):
+            base_square = np.rot90(base_square, k=random.choice([1, 2, 3]))
+        if random.choice([True, False]):
+            base_square = np.fliplr(base_square)
+        if random.choice([True, False]):
+            base_square = np.flipud(base_square)
+
+        # Adjust all numbers with a multiplier and an offset
+        multiplier = random.randint(1, 3)  # Choose a positive multiplier
+        offset = random.randint(0, 10)  # Choose an offset
+        adjusted_square = base_square * multiplier + offset
+
+        return adjusted_square
+
 
     def adjust_numbers_for_level(level):
         magic_square = generate_magic_square()
@@ -184,3 +232,10 @@ def init_routes(app):
         if sum(matrix[i][i] for i in range(n)) != magic_sum or sum(matrix[i][n-1-i] for i in range(n)) != magic_sum:
             return False
         return True
+    
+
+    # ---------------------------------------------------------
+
+
+
+

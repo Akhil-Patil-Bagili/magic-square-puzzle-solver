@@ -9,8 +9,8 @@ export const LandingBar = () => {
     const navigate = useNavigate();
     const navLinks = [
         { href: "/", label: "Home" },
-        { href: "#about-us", label: "About Us" },
-        { href: "#contact-us", label: "Contact Us" },
+        { href: "/about", label: "About" },
+        { href: "/contact", label: "Contact" },
     ];
     
     const handleSignIn = () =>{

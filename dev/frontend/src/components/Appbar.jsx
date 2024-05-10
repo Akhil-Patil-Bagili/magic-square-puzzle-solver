@@ -37,7 +37,7 @@ export const Appbar = ({ user }) => {
 
     return (
         <div className="shadow h-14 flex justify-between items-center px-4 font-poppins">
-            <a href="/" className="flex items-center justify-center text-3xl font-bold font-poppins">
+            <a href="/home" className="flex items-center justify-center text-3xl font-bold font-poppins">
                  <img src={logo} alt="Your Logo" className="h-12 w-auto mr-2" />
             </a>
             <div className="flex items-center" ref={menuRef}>
