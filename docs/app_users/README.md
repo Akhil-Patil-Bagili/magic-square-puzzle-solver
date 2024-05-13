@@ -1,74 +1,67 @@
 # Magic Square Puzzle Solver
 
-## Overview
+## Description
 
-The Magic Square Puzzle Solver is a dynamic web application designed to engage users with one of the oldest mathematical puzzles. It offers a fun, interactive experience, providing complexity and challenge for puzzle enthusiasts. This tool is suitable for individuals looking to enhance their critical thinking, pattern recognition, and problem-solving skills. 
+Magic Square Puzzle Solver is an engaging web application that challenges users to solve magic square puzzles. It combines fun and interactivity, allowing users to delve into one of the most ancient and complex mathematical puzzles.
 
-## Getting Started
+## How to Use the Application
 
-### Accessing the Application
+### Registration and Login
 
-Visit the [Magic Square Puzzle Solver](https://github.com/Akhil-Patil-Bagili/magic-square-puzzle-solver) on GitHub to get started. Follow the deployment instructions to set up the project locally or on a live server.
+1. **Register:**
+   - Click on the "Register" button on the homepage.
+   - Fill in your first name, last name, email, and password.
+   - Submit the registration form to create your account.
 
-### Prerequisites
+2. **Login:**
+   - Click on the "Login" button on the homepage.
+   - Enter your registered email and password.
+   - Submit the login form to access your account.
 
-- Git installed on your machine.
-- A Heroku account for deployment (optional).
-- Basic knowledge of React.js and Flask if you wish to contribute.
+### Home Screen and Playing the Game
 
-### Installation
+1. **Puzzle Overview:**
+   - Once logged in, you will be taken to the home screen where you will find a magic square puzzle.
 
-1. Clone the repository: `git clone https://github.com/Akhil-Patil-Bagili/magic-square-puzzle-solver`
-2. Navigate to the project directory and install dependencies:
-   - For the backend (Flask), run `pip install -r requirements.txt`.
-   - For the frontend (React.js), navigate to the frontend directory and run `npm install`.
-3. Start the backend server with `flask run` and the frontend application with `npm start`.
-4. Your application should now be running locally.
+2. **Drag and Drop Numbers:**
+   - On the home screen, you will see draggable numbers.
+   - Drag and drop these numbers into the puzzle grid.
+   - Arrange the numbers so that the sum of the numbers in each row, column, and diagonal is the same.
 
-### User Registration and Login
+### Hints and Help
 
-To enhance your experience, you can register an account to track your progress:
+1. **Magic Sum Hint:**
+   - If you need help, click on the "Magic Sum" button.
+   - This will display the magic sum that each row, column, and diagonal should add up to.
 
-- Click on the "Register" button on the homepage.
-- Provide a username, valid email address, and password.
-- Login using your credentials to access your personalized dashboard.
+2. **Partial Solution Hint:**
+   - For additional help, click on the "Partial Solution" button.
+   - This will show part of the solution for the current puzzle.
 
-### Playing the Game
+### Difficulty Levels
 
-1. **Select Puzzle Size**: Choose a puzzle size to start the game.
-2. **Solve the Puzzle**: Click on squares to fill them. The goal is to arrange the numbers so that each row, column, and diagonal sums to the same number.
-3. **Hints and Solutions**: Use the "Hint" button for suggestions or the "Solve" button to see the solution.
-4. **Save Progress**: Logged-in users can save their progress anytime.
+1. **Select Difficulty Level:**
+   - You can choose from three different difficulty levels:
+     - **Easy:** A 3x3 grid with easy numbers.
+     - **Medium:** A 3x3 grid with higher range numbers.
+     - **Difficult:** A 4x4 grid with complex numbers.
 
-## Support and Feedback
+2. **Adjusting Difficulty:**
+   - Select your preferred difficulty level to start a new puzzle with the chosen difficulty.
 
-For support, contact us via email at support@example.com. We welcome your feedback and suggestions for new features through our feedback form on the website.
+### Additional Features
 
-## Development Journey
+1. **Profile Update:**
+   - Users can update their profile information from the profile section.
 
-The development process spanned several weeks, from initial setup and backend development to frontend creation, integration testing, and final deployment. Key milestones included:
+2. **Solution Validation:**
+   - After arranging the numbers, you can validate your solution.
+   - If your solution is correct, a success message will be displayed.
 
-- Week 1: Setup GitHub repository and initialize Flask backend.
-- Week 2-3: Implement magic square generation algorithm and develop React frontend.
-- Week 4: Backend and frontend integration testing.
-- Week 5: UI finalization and application deployment.
+3. **Reveal Solution:**
+   - If you are unable to solve the puzzle, you can choose to reveal the correct solution.
 
-## Tech Stack & Core Technologies
 
-- **Frontend**: React.js, Tailwind CSS
-- **Backend**: Flask
-- **Database**: PostgreSQL (for user data management)
-- **Deployment**: Heroku
-- **Version Control**: Git
+### Deployed Links
 
-Key technologies include a magic square generation algorithm, dynamic puzzle generation, and solution validation logic.
-
-## Market Relevance
-
-Targeted at casual gamers and educational platforms, the Magic Square Puzzle Solver combines entertainment with educational value, enhancing critical thinking and pattern recognition in a user-friendly interface suitable for all ages.
-
-## Conclusion
-
-The Magic Square Puzzle Solver is more than just a game; it's a tool designed to engage, educate, and challenge its users, providing a unique blend of entertainment and intellectual stimulation.
-
-Thank you for exploring the Magic Square Puzzle Solver!
+- [Magic Square Puzzle Solver](http://54.242.48.248/)
