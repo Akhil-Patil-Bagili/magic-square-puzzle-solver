@@ -7,8 +7,15 @@ WORKDIR /usr/src/app
 # Copy the current directory contents into the container at /usr/src/app
 COPY . .
 
+# Copy the environment file
+ARG ENVIRONMENT=development
+COPY .env.${ENVIRONMENT} .env
+
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Ensure Gunicorn is installed
+RUN pip install gunicorn
 
 # Copy entrypoint script and make it executable
 COPY entrypoint.sh /usr/src/app
@@ -25,4 +32,4 @@ ENV FLASK_APP=app
 
 # Use the entrypoint script to run migrations and then start the Flask application
 ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "wsgi:app"]

@@ -3,3 +3,5 @@ instance/
 venv/
 migrations/
 *.pyc
+.env
+.env.production
