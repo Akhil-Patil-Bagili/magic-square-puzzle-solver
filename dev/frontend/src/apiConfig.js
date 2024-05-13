@@ -1,6 +1,8 @@
 // dev/frontend/src/apiConfig.js
 const API_BASE_URL = import.meta.env.VITE_BACKEND_API_URL || 'http://localhost:5000';
 
+console.log('API_BASE_URL:', API_BASE_URL);
+
 export const API_ENDPOINTS = {
   register: `${API_BASE_URL}/api/users/register`,
   login: `${API_BASE_URL}/api/users/login`,

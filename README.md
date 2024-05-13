@@ -6,6 +6,9 @@ Magic Square Puzzle Solver is an engaging web application that challenges users 
 
 ## Quick Links
 
+- **Live Link:** (http://54.242.48.248/)
+Magic Square Puzzle solver is deployed on AWS. You can use the above link to directly access the game.
+
 - **GitHub Repository:** [View on GitHub](https://github.com/Akhil-Patil-Bagili/magic-square-puzzle-solver)
 
 ## Getting Started
