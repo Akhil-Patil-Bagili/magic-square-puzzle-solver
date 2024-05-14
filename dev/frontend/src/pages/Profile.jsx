@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Heading } from "../components/Heading";
-import { SubHeading } from "../components/SubHeading";
 import { ButtonDark } from "../components/ButtonDark";
 import { Appbar } from "../components/Appbar";
-import { InputBox } from "../components/InputBox"; // Ensure you have an InputBox component
+import { InputBox } from "../components/InputBox"; 
 import { API_ENDPOINTS } from "../apiConfig";
+import { Loader } from '../components/Loader';
 
 export const Profile = () => {
     const [user, setUser] = useState({});
     const [editMode, setEditMode] = useState(false);
     const [editedUser, setEditedUser] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
 
     const fetchUserData = async () => {
         const token = localStorage.getItem('token');
@@ -18,15 +19,17 @@ export const Profile = () => {
             console.error("No token found");
             return; 
         }
-        
+        setIsLoading(true);
         try {
             const userResponse = await axios.get("http://127.0.0.1:5000/api/users/me", {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setUser(userResponse.data);
-            setEditedUser(userResponse.data); // Initialize form with current user data
+            setEditedUser(userResponse.data); 
         } catch (error) {
             console.error("Error fetching data:", error);
+        } finally {
+            setIsLoading(false); 
         }
     };
 
@@ -35,13 +38,12 @@ export const Profile = () => {
     }, []);
 
     const handleInputChange = (e) => {
-        console.log(e.target.name)
-        console.log(e.target.value)
         setEditedUser({...editedUser, [e.target.name]: e.target.value});
     };
 
     const handleSubmit = async () => {
         const token = localStorage.getItem('token');
+        setIsLoading(true);
         try {
             await axios.put(API_ENDPOINTS.update, editedUser, {
                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
@@ -52,6 +54,8 @@ export const Profile = () => {
         } catch (error) {
             console.error("Error updating profile:", error.response ? error.response.data.message : "Network Error");
             alert("Failed to update profile.");
+        } finally {
+            setIsLoading(false); 
         }
     };
 
@@ -82,6 +86,7 @@ export const Profile = () => {
                     )}
                 </div>
             </div>
+            {isLoading && <Loader />} 
         </div>
     );
 };

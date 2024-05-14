@@ -115,9 +115,8 @@ def init_routes(app):
         if generated_numbers is None:
             return None, "No puzzle generated yet"
 
-        size = len(generated_numbers)  # Determine the size based on the generated_numbers
+        size = len(generated_numbers)  
 
-        # Try to find a valid magic square by permuting the generated numbers
         for perm in permutations(generated_numbers.flatten()):
             if check_magic_square(np.array(perm).reshape(size, size)):
                 return np.array(perm).reshape(size, size), None
@@ -141,20 +140,16 @@ def init_routes(app):
             if error:
                 return jsonify({"error": error}), 400
 
-            # Ensure the solution is a numpy array for uniform handling
             if not isinstance(solution, np.ndarray):
                 solution = np.array(solution)
 
-            # Determine number of cells to reveal based on level and the size of the solution
-            num_reveals = 4 if level == 1 else (3 if level == 2 else 5)  # Adjust number of revealed cells for 4x4
-            size = int(np.sqrt(len(solution.flatten())))  # Determine grid size from the solution
+            num_reveals = 4 if level == 1 else (3 if level == 2 else 5)  
+            size = int(np.sqrt(len(solution.flatten())))  
 
-            # Randomly select cells to reveal
             all_indices = [(i, j) for i in range(size) for j in range(size)]
             random.shuffle(all_indices)
             revealed_indices = set(all_indices[:num_reveals])
 
-            # Construct the partial solution with some cells hidden
             partial_solution = [
                 [int(solution[i][j]) if (i, j) in revealed_indices else None for j in range(size)]
                 for i in range(size)
@@ -172,16 +167,16 @@ def init_routes(app):
 
     @app.route('/api/hints/magic-sum', methods=['GET'])
     def get_magic_sum():
-        global generated_numbers  # Access the global variable
+        global generated_numbers  
         try:
             if generated_numbers is None:
                 return jsonify({"error": "No puzzle generated yet"}), 400
 
-            magic_sum = np.sum(generated_numbers[0])  # Use the stored numbers directly
+            magic_sum = np.sum(generated_numbers[0])  
             current_app.logger.debug(f'Magic Sum: {magic_sum}') 
-            return jsonify({"magicSum": int(magic_sum)})  # Convert to int
+            return jsonify({"magicSum": int(magic_sum)})  
         except Exception as e:
-            app.logger.error(f"Failed to get magic sum: {str(e)}")  # Log detailed error
+            app.logger.error(f"Failed to get magic sum: {str(e)}")  
             return jsonify({"error": "Internal server error", "message": str(e)}), 500
 
 
@@ -190,7 +185,6 @@ def init_routes(app):
         return np.array([[8, 1, 6], [3, 5, 7], [4, 9, 2]])
     
     def generate_4x4_magic_square():
-    # Start with a known 4x4 magic square
         base_square = np.array([
             [16, 2, 3, 13],
             [5, 11, 10, 8],
@@ -198,7 +192,6 @@ def init_routes(app):
             [4, 14, 15, 1]
         ])
 
-        # Randomly apply rotation and reflection transformations
         if random.choice([True, False]):
             base_square = np.rot90(base_square, k=random.choice([1, 2, 3]))
         if random.choice([True, False]):
@@ -206,9 +199,8 @@ def init_routes(app):
         if random.choice([True, False]):
             base_square = np.flipud(base_square)
 
-        # Adjust all numbers with a multiplier and an offset
-        multiplier = random.randint(1, 3)  # Choose a positive multiplier
-        offset = random.randint(0, 10)  # Choose an offset
+        multiplier = random.randint(1, 3)  
+        offset = random.randint(0, 10)  
         adjusted_square = base_square * multiplier + offset
 
         return adjusted_square
@@ -234,7 +226,6 @@ def init_routes(app):
         return True
     
 
-    # ---------------------------------------------------------
 
 
 

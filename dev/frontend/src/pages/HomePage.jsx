@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { PuzzleBoard } from "../components/PuzzleBoard";
 import { API_ENDPOINTS } from "../apiConfig";
+import { Loader } from '../components/Loader';
 
 export const HomePage = () => {
     const [user, setUser] = useState({});
@@ -13,6 +14,7 @@ export const HomePage = () => {
     const [partialSolution, setPartialSolution] = useState([]);
     const [partialSolutionFetched, setPartialSolutionFetched] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const hintRef = useRef(null);
     const difficultyRef = useRef(null);
 
@@ -24,6 +26,7 @@ export const HomePage = () => {
         }
 
         const fetchData = async () => {
+            setIsLoading(true);
             try {
                 const userResponse = await axios.get(API_ENDPOINTS.profile, {
                     headers: { Authorization: `Bearer ${token}` }
@@ -31,6 +34,8 @@ export const HomePage = () => {
                 setUser(userResponse.data);
             } catch (error) {
                 console.error("Error fetching data:", error);
+            } finally {
+                setIsLoading(false); 
             }
         };
 
@@ -62,6 +67,7 @@ export const HomePage = () => {
 
 
     const fetchMagicSum = async () => {
+        setIsLoading(true);
         try {
             const response = await axios.get(`${API_ENDPOINTS.hintsMagicSum}?level=${difficulty}`);
             if (response.data && response.data.magicSum !== undefined) {
@@ -73,11 +79,14 @@ export const HomePage = () => {
         } catch (error) {
             console.error("Error fetching magic sum:", error);
             alert("Failed to fetch magic sum. Please try again.");
+        } finally {
+            setIsLoading(false); 
         }
     };
 
     const fetchPartialSolution = async () => {
         if (!partialSolutionFetched) {
+            setIsLoading(true);
             try {
                 const response = await axios.get(`${API_ENDPOINTS.hintsPartialSolution}?level=${difficulty}`);
                 if (response.data && response.data.partialSolution) {
@@ -89,6 +98,8 @@ export const HomePage = () => {
             } catch (error) {
                 console.error("Error fetching partial solution:", error);
                 alert("Failed to fetch partial solution: " + (error.response?.data?.message || error.message));
+            } finally {
+                setIsLoading(false); 
             }
         }
     };
@@ -136,6 +147,7 @@ export const HomePage = () => {
                 </div>
                 <PuzzleBoard difficulty={difficulty} magicSum={magicSum} partialSolution={partialSolution} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} resetPartialSolutionFetched={handleResetPartialSolution} />
             </div>
+            {isLoading && <Loader />}
         </div>
     );
 };

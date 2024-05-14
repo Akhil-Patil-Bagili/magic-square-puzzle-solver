@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom"
 import { LandingBar } from "../components/LandingBar"
 import { API_ENDPOINTS } from "../apiConfig"
 import { Modal } from '../components/Modal';
+import { Loader } from '../components/Loader';
 
 export const SignIn = () => {
 
@@ -17,10 +18,18 @@ export const SignIn = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault(); 
+    if (!username || !password) {
+      setModalMessage('All fields are required.');
+      setIsSuccess(false);
+      setIsModalOpen(true);
+      return;
+  }
+    setIsLoading(true);
     try {
       const response = await axios.post(API_ENDPOINTS.login, {
         username,
@@ -35,7 +44,9 @@ export const SignIn = () => {
       setModalMessage("Invalid username or password. Please try again.");
       setIsSuccess(false);
       setIsModalOpen(true);
-  }
+  } finally {
+    setIsLoading(false); 
+}
 };
 
 const closeModal = () => {
@@ -61,6 +72,7 @@ const closeModal = () => {
             </form>
             </div>
         </div>
+        {isLoading && <Loader />}
         {isModalOpen && (
                 <Modal onClose={closeModal}>
                     <h3 className="text-lg font-bold mb-4">{isSuccess ? 'Success' : 'Error'}</h3>

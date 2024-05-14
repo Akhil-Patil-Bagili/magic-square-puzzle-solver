@@ -9,6 +9,7 @@ import { SubHeading } from '../components/SubHeading';
 import { LandingBar } from '../components/LandingBar';
 import { API_ENDPOINTS } from '../apiConfig';
 import { Modal } from '../components/Modal';
+import { Loader } from '../components/Loader';
 
 export const SignUp = () => {
     const [firstName, setFirstName] = useState('');
@@ -18,10 +19,18 @@ export const SignUp = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
     const [isSuccess, setIsSuccess] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault(); 
+        if (!firstName || !lastName || !username || !password) {
+            setModalMessage('All fields are required.');
+            setIsSuccess(false);
+            setIsModalOpen(true);
+            return;
+        }
+        setIsLoading(true);
         try {
             const response = await axios.post(API_ENDPOINTS.register, {
                 firstName,
@@ -47,6 +56,8 @@ export const SignUp = () => {
             }
             setIsSuccess(false);
             setIsModalOpen(true);
+        } finally {
+            setIsLoading(false); 
         }
     };
 
@@ -82,6 +93,7 @@ export const SignUp = () => {
                     </form>
                 </div>
             </div>
+            {isLoading && <Loader />}
             {isModalOpen && (
                 <Modal onClose={closeModal}>
                     <h3 className="text-lg font-bold mb-4">{isSuccess ? 'Success' : 'Error'}</h3>

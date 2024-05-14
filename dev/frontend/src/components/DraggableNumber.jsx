@@ -7,7 +7,7 @@ const DraggableNumber = ({ id, number, onRemove }) => {
     end: (item, monitor) => {
       const didDrop = monitor.didDrop();
       if (!didDrop) {
-        onRemove(id);  // Ensure we pass the correct identifier
+        onRemove(id); 
       }
     },
     collect: monitor => ({
