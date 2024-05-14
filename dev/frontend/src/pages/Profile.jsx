@@ -21,7 +21,7 @@ export const Profile = () => {
         }
         setIsLoading(true);
         try {
-            const userResponse = await axios.get("http://127.0.0.1:5000/api/users/me", {
+            const userResponse = await axios.get(API_ENDPOINTS.profile, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setUser(userResponse.data);
