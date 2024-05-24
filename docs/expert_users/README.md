@@ -26,22 +26,38 @@ Before you begin, ensure you have the following installed:
 
 **Backend Setup:**
 
-1. Navigate to the backend directory from the root directory:
+1. **Navigate to the backend directory** from the root directory:
     ```bash
     cd dev/backend # Assuming you're in the root directory, enter this command to navigate to the backend.
     ```
-   
-2. Install the dependencies:
+
+2. **Set up a virtual environment**:
+    ```bash
+    python -m venv venv  # Create a virtual environment in the 'venv' directory
+    ```
+
+3. **Activate the virtual environment**:
+    - On **Windows**:
+        ```bash
+        venv\Scripts\activate
+        ```
+    - On **Unix or MacOS**:
+        ```bash
+        source venv/bin/activate
+        ```
+
+4. **Install the dependencies**:
     ```bash
     pip install -r requirements.txt
     ```
-   
-3. Run the backend server:
+
+5. **Run the backend server**:
     ```bash
     flask run
     ```
-   
+
     **Note:** Keep the terminal up and running. Open a new terminal and navigate back to the project root directory for frontend setup.
+
 
 **Frontend Setup:**
 
@@ -60,7 +76,7 @@ Before you begin, ensure you have the following installed:
     npm run dev
     ```
    
-4. The web application will now be available at [http://localhost:3000](http://localhost:3000).
+4. The web application will now be available at [http://localhost:5173](http://localhost:5173).
 
 #### Option 2: Docker Setup
 
@@ -84,7 +100,7 @@ Before proceeding, please ensure the Docker daemon is running on your machine. T
     This step might take a few minutes as Docker needs to download the necessary images and build the containers.
    
 4. **Access the Application**
-    Once everything is up and running, the web application will be available at [http://localhost:3000](http://localhost:3000).
+    Once everything is up and running, the web application will be available at [http://localhost:5173](http://localhost:5173).
 
 
 ## Project Milestones
